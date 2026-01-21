@@ -1,8 +1,10 @@
 import React from 'react';
 import { ArrowLeft, Store } from 'lucide-react';
 import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 export default function RetailerWalletList({ onBack }) {
+    const navigate = useNavigate()
 
     const fundData = useSelector(state => state.fundManagement?.retailer || {});
     const {
@@ -12,14 +14,14 @@ export default function RetailerWalletList({ onBack }) {
     } = fundData;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-4">
 
             {/* Header */}
             <div className="backdrop-blur-[24px] bg-white/60 rounded-[24px] border border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.06)] p-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={onBack}
+                            onClick={() => navigate(-1)}
                             className="w-10 h-10 rounded-[14px] bg-white/60 border border-white/40 flex items-center justify-center hover:bg-white/80 transition-all active:scale-95"
                         >
                             <ArrowLeft className="w-5 h-5 text-gray-700" />

@@ -75,7 +75,7 @@ export default function DeductFund({ onBack }) {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-4">
 
             {/* Header */}
             <div className="backdrop-blur-[24px] bg-white/60 rounded-[24px] border border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.06)] p-6">

@@ -77,7 +77,7 @@ const GlobalToast = () => {
                 </div>
 
                 {/* Text Area */}
-                <div className="relative z-10 flex-1">
+                <div className="relative z-10 flex-1 ">
                     <p className="text-gray-900 font-bold text-[16px] tracking-tight leading-none mb-1">
                         {data.type.charAt(0).toUpperCase() + data.type.slice(1)}
                     </p>

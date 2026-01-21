@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from './Header';
-import Sidebar from './Sidebar';
+import Header from './AdminHeader';
+import Sidebar from './AdminSidebar';
 
 function Layout() {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);

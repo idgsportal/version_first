@@ -1,16 +1,18 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // layouts
-import AdminLayout from "../admin/layout/Layout";
+import AdminLayout from "../admin/layout/AdminLayout";
 
 // pages
 import LoginPage from "../auth/page/LoginPage";
-import Dashboard from "../admin/pages/Dashboard";
-import SuccessForms from "../admin/forms/SuccessForms";
-import PendingForms from "../admin/forms/PendingForms";
-import RejectedForms from "../admin/forms/RejectedForms";
-import RefundForms from "../admin/forms/RefundForms";
-// import Distributor from "../admin/pages/Distributor";
+import Dashboard from "../admin/pages/AdminDashboard";
+import SuccessForms from "../admin/forms/dashboard/SuccessForms";
+import PendingForms from "../admin/forms/dashboard/PendingForms";
+import RejectedForms from "../admin/forms/dashboard/RejectedForms";
+import RefundForms from "../admin/forms/dashboard/RefundForms";
+import Distributor from "../admin/pages/DistributorManagement";
+import CreateDistributor from "../admin/forms/distributor/CreateDistributor";
+import DistributorWalletList from "../admin/forms/fund/DistributorWalletList"
 // import Retailer from "../admin/pages/Retailer";
 // import SubAdmin from "../admin/pages/SubAdmin";
 import FundManagement from "../admin/pages/FundManagement";
@@ -22,6 +24,15 @@ import { useSelector } from "react-redux";
 import AddFund from "../admin/forms/fund/AddFund";
 import DeductFund from "../admin/forms/fund/DeductFund";
 import RetailerWalletList from "../admin/forms/fund/RetailerWalletList";
+import DistributorList from "../admin/forms/distributor/DistributorList";
+import SubAdminWalletList from "../admin/forms/fund/SubAdminWalletList";
+import RetailerManagement from "../admin/pages/RetailerManagement";
+import CreateRetailer from "../admin/forms/retailer/CreateRetailer";
+import RetailerList from "../admin/forms/retailer/RetailerList";
+import SubAdminManagement from "../admin/pages/SubAdminManagement";
+import CreateSubAdmin from "../admin/forms/subadmin/CreateSubAdmin";
+import SubAdminList from "../admin/forms/subadmin/SubAdminList";
+import ServicesManagement from "../admin/pages/ServiceManagement";
 
 
 const AppRoutes = () => {
@@ -44,10 +55,19 @@ const AppRoutes = () => {
                 <Route path="/admin/fund-management/add" element={<AddFund />} />
                 <Route path="/admin/fund-management/deduct" element={<DeductFund />} />
                 <Route path="/admin/fund-management/retailer-list" element={<RetailerWalletList />} />
-                {/* <Route path="distributor" element={<Distributor />} />
-                    <Route path="retailer" element={<Retailer />} />
-                    <Route path="sub-admin" element={<SubAdmin />} /> */}
-                {/* <Route path="service" element={<Service />} /> */}
+                <Route path="/admin/fund-management/distributor-list" element={<DistributorWalletList />} />
+                <Route path="/admin/fund-management/subadmin-list" element={<SubAdminWalletList />} />
+                <Route path="distributor" element={<Distributor />} />
+                <Route path="/admin/distributors/create" element={<CreateDistributor />} />
+                <Route path="/admin/distributors" element={<DistributorList />} />
+                <Route path="/admin/retailer" element={<RetailerManagement />} />
+                <Route path="/admin/retailer/create" element={<CreateRetailer />} />
+                <Route path="/admin/retailers" element={<RetailerList />} />
+                <Route path="/admin/sub-admin" element={<SubAdminManagement />} />
+                <Route path="/admin/sub-admin/create" element={<CreateSubAdmin />} />
+                <Route path="/admin/sub-admins" element={<SubAdminList />} />
+                <Route path="/admin/services" element={<ServicesManagement />} />
+
             </Route>
 
             {/* Default */}
