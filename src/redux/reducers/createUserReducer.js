@@ -39,6 +39,21 @@ export const createUserReducer = (state = initialState, action) => {
                 loading: true,
                 error: null
             };
+        case userConstant.GET_USER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                users: action.payload.users,
+                error: null
+            };
+
+        case userConstant.GET_USER_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload.error
+            };
+
         default:
             return state;
     }
