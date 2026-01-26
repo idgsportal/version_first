@@ -1,6 +1,7 @@
 import { authConstant } from "./Constants"
 import axios from "../../Helper/axios"
 import { toast } from "../../ui/toast/ToastHelper"
+import { socket } from "../../socket/socket";
 
 
 
@@ -18,10 +19,11 @@ export const login = (user) => {
             );
 
             if (res.status === 200) {
-                const { user, message } = res.data;
+                const { user, message, token } = res.data;
 
                 toast.success(message);
-
+                socket.auth = { token };
+                socket.connect();
                 dispatch({
                     type: authConstant.LOGIN_SUCCESS,
                     payload: { user }
@@ -31,6 +33,7 @@ export const login = (user) => {
             const errorMsg =
                 error.response?.data?.message ||
                 "Login failed. Please check your credentials.";
+            console.log(errorMsg)
 
             toast.error(errorMsg);
 
@@ -45,14 +48,15 @@ export const login = (user) => {
 export const isUserLoggedIn = () => {
     return async (dispatch, getState) => {
 
-        const { authChecked, authenticating } = getState().auth;
-        console.log({ authChecked, authenticating })
-        if (authChecked || authenticating) return;
+        const { authChecked } = getState().auth;
+        if (authChecked) return;
 
-        dispatch({ type: authConstant.LOGIN_REQUEST });
+        dispatch({ type: authConstant.AUTH_CHECK_START });
 
         try {
-            const res = await axios.get("/api/users/me", { withCredentials: true });
+            const res = await axios.get("/api/users/me", {
+                withCredentials: true
+            });
 
             dispatch({
                 type: authConstant.LOGIN_SUCCESS,
@@ -60,15 +64,8 @@ export const isUserLoggedIn = () => {
             });
 
         } catch (error) {
-
-            // 🔴 server down / connection refused
-            if (!error.response) {
-                console.error("Backend not reachable");
-            }
-
             dispatch({
-                type: authConstant.LOGIN_FAILURE,
-                payload: { error: "Not authenticated" }
+                type: authConstant.AUTH_CHECK_END
             });
         }
     };
@@ -78,6 +75,7 @@ export const isUserLoggedIn = () => {
 
 export const signout = () => {
     return async (dispatch) => {
+        socket.disconnect();
         dispatch({ type: authConstant.LOGOUT_REQUEST });
 
         try {

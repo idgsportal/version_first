@@ -20,7 +20,7 @@ function LoginPage() {
                 switch (user.role) {
                     case 'admin': navigate("/admin"); break;
                     case 'distributor': navigate("/distributor/dashboard"); break;
-                    case 'retailer': navigate("/retailer/dashboard"); break;
+                    case 'retailer': navigate("/retailer"); break;
                     default: navigate("/");
                 }
             }

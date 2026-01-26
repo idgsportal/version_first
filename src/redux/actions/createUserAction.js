@@ -24,16 +24,10 @@ export const createUser = (formData) => {
         form.append('aadharNo', formData.aadhaar);
         form.append('panNo', formData.pan);
         form.append('role', formData.role);
-        form.append('password', "123456"); // Default password
-
-        // 2. KYC Files append karein (Ye wahi keys honi chahiye jo backend userSchema mein hain)
-        if (formData.profilePhoto) form.append('profilePhoto', formData.profilePhoto);
-        if (formData.shopPhoto) form.append('shopPhoto', formData.shopPhoto);
-        if (formData.aadharCard) form.append('aadharCard', formData.aadharCard);
-        if (formData.panCard) form.append('panCard', formData.panCard);
+        form.append('password', formData.password);
 
         try {
-            // 3. Post request mein headers ka dhyan rakhein
+
             const res = await axios.post("/api/users/signup", form, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

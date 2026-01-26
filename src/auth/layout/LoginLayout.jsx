@@ -18,6 +18,8 @@ export default function LoginLayout() {
     const [identifier, setidentifier] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [loginAttempted, setLoginAttempted] = useState(false);
+
     const navigate = useNavigate();
 
     const auth = useSelector(state => state.auth)
@@ -31,6 +33,7 @@ export default function LoginLayout() {
     const dispatch = useDispatch()
     const handleLogin = (e) => {
         e.preventDefault();
+        setLoginAttempted(true);
         const user = {
             identifier, password
         }
@@ -110,25 +113,28 @@ export default function LoginLayout() {
                                         </div>
                                     </div>
                                     <div>
-                                        {auth.error && (
+                                        {auth.error && loginAttempted && (
                                             <p className="text-red-500 text-sm mt-2 font-medium animate-shake">
                                                 {auth.error}
                                             </p>
                                         )}
 
-                                        {/* Success Message के लिए (Green Color) - अगर आप दिखाना चाहें */}
                                         {auth.message && !auth.error && (
                                             <p className="text-green-600 text-sm mt-2 font-medium">
                                                 {auth.message}
                                             </p>
                                         )}
-                                        <div className="text-right">
-                                            <Link to={"forgot-password"}
-                                                className="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors inline-flex items-center gap-1">
-                                                Forgot Password?</Link>
 
+                                        <div className="text-right">
+                                            <Link
+                                                to="forgot-password"
+                                                className="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors inline-flex items-center gap-1"
+                                            >
+                                                Forgot Password?
+                                            </Link>
                                         </div>
                                     </div>
+
 
                                     {/* Forgot Password Link */}
 

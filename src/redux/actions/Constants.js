@@ -6,6 +6,9 @@ export const authConstant = {
     LOGOUT_REQUEST: "LOGOUT_REQUEST",
     LOGOUT_SUCCESS: "LOGOUT_SUCCESS",
     LOGOUT_FAILURE: "LOGOUT_FAILURE",
+    AUTH_CHECK_START: "AUTH_CHECK_START",
+    AUTH_CHECK_END: "AUTH_CHECK_END",
+
 }
 
 export const userConstant = {

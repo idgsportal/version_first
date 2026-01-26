@@ -7,6 +7,7 @@ import TextArea from '../../../ui/TextArea';
 import { createUser } from '../../../redux/actions/createUserAction';
 import { toast } from '../../../ui/toast/ToastHelper';
 
+
 export default function CreateDistributor() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -14,6 +15,7 @@ export default function CreateDistributor() {
     const { loading, error } = useSelector(state => state.users);
 
     const [successMessage, setSuccessMessage] = useState('');
+    const [confirmPassword, setConformPassword] = useState('');
     const [formData, setFormData] = useState({
         shopName: '',
         shopAddress: '',
@@ -24,27 +26,25 @@ export default function CreateDistributor() {
         email: '',
         aadhaar: '',
         pan: '',
-        profilePhoto: null,
-        shopPhoto: null,
-        aadharCard: null,
-        panCard: null,
-        role: 'distributor'
+        role: 'distributor',
+        password: '',
+
     });
 
-    const handleFileChange = (e, key) => {
-        const file = e.target.files[0];
-        if (!file) return;
 
-        if (!file.type.startsWith('image/')) {
-            alert('Sirf image upload karein');
-            return;
-        }
+    //     const file = e.target.files[0];
+    //     if (!file) return;
 
-        setFormData(prev => ({
-            ...prev,
-            [key]: file
-        }));
-    };
+    //     if (!file.type.startsWith('image/')) {
+    //         alert('Sirf image upload karein');
+    //         return;
+    //     }
+
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         [key]: file
+    //     }));
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,22 +53,22 @@ export default function CreateDistributor() {
             toast.error("Please fill all required fields")
             return;
         }
-
+        if (formData.password !== confirmPassword) {
+            toast.error("Password not matched");
+            return;
+        }
         const success = await dispatch(createUser(formData));
 
         if (success) {
             toast.success('Distributor created successfully!');
-            setTimeout(() => {
-                navigate('/admin/distributors');
-            }, 2000);
+            setSuccessMessage("Distributor created successfully!")
+
         } else {
             toast.error(error || 'Failed to create distributor');
+            setSuccessMessage(error || 'Failed to create distributor')
         }
     };
-    const getPreviewUrl = (file) => {
-        if (!file) return null;
-        return URL.createObjectURL(file);
-    };
+
     return (
         <div className="space-y-6 p-4">
             {/* HEADER */}
@@ -102,6 +102,7 @@ export default function CreateDistributor() {
                     <Input
                         label="Shop Name *"
                         value={formData.shopName}
+                        placeholder={"Enter Shop Name"}
                         onChange={e => setFormData({ ...formData, shopName: e.target.value })}
                     />
 
@@ -109,26 +110,42 @@ export default function CreateDistributor() {
                         label="Distributor Name *"
                         value={formData.name}
                         onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Enter Distributor name"
                     />
 
                     <TextArea
                         label="Shop Address *"
                         value={formData.shopAddress}
                         onChange={e => setFormData({ ...formData, shopAddress: e.target.value })}
+                        placeholder="Enter Shop Address"
                     />
 
                     <Input
                         label="Shop Pincode *"
                         value={formData.shopPincode}
                         onChange={e => setFormData({ ...formData, shopPincode: e.target.value })}
+                        placeholder="Enter Shop Pincode"
+                    />
+                    <Input
+                        type="text"
+                        label="Date of Birth *"
+                        placeholder="DD/MM/YYYY"
+                        value={formData.dob}
+                        onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, ''); // sirf numbers
+
+                            if (value.length > 8) value = value.slice(0, 8);
+
+                            if (value.length > 4) {
+                                value = value.replace(/(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
+                            } else if (value.length > 2) {
+                                value = value.replace(/(\d{2})(\d{0,2})/, '$1/$2');
+                            }
+                            setFormData({ ...formData, dob: value });
+                        }}
+                        inputMode="numeric"
                     />
 
-                    <Input
-                        type="date"
-                        label="Date of Birth *"
-                        value={formData.dob}
-                        onChange={e => setFormData({ ...formData, dob: e.target.value })}
-                    />
 
                     <Input
                         label="Mobile Number *"
@@ -141,12 +158,14 @@ export default function CreateDistributor() {
                         }}
                         inputMode="numeric"
                         pattern="[0-9]*"
+                        placeholder="Enter Mobile Number"
                     />
 
                     <Input
                         label="Email ID *"
                         value={formData.email}
                         onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="Enter Email Id"
                     />
 
                     <Input
@@ -165,63 +184,30 @@ export default function CreateDistributor() {
                         placeholder="0000 0000 0000"
                     />
 
-
                     <Input
                         label="PAN Number *"
                         value={formData.pan}
                         onChange={e => setFormData({ ...formData, pan: e.target.value })}
+                        placeholder="Enter Pan Number"
                     />
-                </div>
 
-                {/* FILE UPLOADS */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {[
-                        { label: 'Shop Photo', key: 'shopPhoto' },
-                        { label: 'Profile Photo', key: 'profilePhoto' },
-                        { label: 'Aadhaar Card', key: 'aadharCard' },
-                        { label: 'PAN Card', key: 'panCard' }
-                    ].map(item => (
-                        <div key={item.key}>
-                            <label className="block text-gray-700 mb-2">
-                                {item.label} *
-                            </label>
+                    <Input
+                        label="Password *"
+                        value={formData.password}
+                        onChange={e => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="Enter Password"
+                    />
 
-                            <input
-                                type="file"
-                                hidden
-                                id={item.key}
-                                onChange={e => handleFileChange(e, item.key)}
-                            />
+                    <Input
+                        label="Confirm Password*"
+                        value={formData.confirmPassword}
+                        onChange={(e) => setConformPassword(e.target.value)}
+                        placeholder="Confirm Password"
+                    />
 
-                            <label
-                                htmlFor={item.key}
-                                className="flex flex-col items-center justify-center h-40 rounded-[20px] border-2 border-dashed border-white/40 bg-white/40 cursor-pointer hover:bg-white/60 transition-all"
-                            >
-                                {formData[item.key] ? (
-                                    <img
-                                        src={URL.createObjectURL(formData[item.key])}
-                                        alt={item.label}
-                                        className="
-                                            h-full w-full object-contain rounded-[18px]
-                                            transition-transform duration-300 ease-out
-                                            hover:scale-150
-                                        "
-                                    />
-                                ) : (
-                                    <>
-                                        <Upload className="w-6 h-6 text-blue-500 mb-2 " />
-                                        <span className="text-sm text-gray-700">
-                                            Choose {item.label}
-                                        </span>
-                                    </>
-                                )}
-                            </label>
-                        </div>
-                    ))}
                 </div>
 
 
-                {/* ACTIONS */}
                 <div className="flex justify-end gap-4">
                     <button
                         type="button"

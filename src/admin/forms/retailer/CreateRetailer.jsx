@@ -2,46 +2,56 @@ import React from 'react'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus, Upload } from "lucide-react";
+import Input from '../../../ui/Input';
+import TextArea from '../../../ui/TextArea';
+import { toast } from '../../../ui/toast/ToastHelper';
+import { createUser } from '../../../redux/actions/createUserAction';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 function CreateRetailer() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [successMessage, setSuccessMessage] = useState('');
+    const [confirmPassword, setConformPassword] = useState('');
     const [formData, setFormData] = useState({
-        shopName: "",
-        shopAddress: "",
-        retailerName: "",
-        dob: "",
-        mobile: "",
-        email: "",
-        aadhaar: "",
-        pan: "",
+        shopName: '',
+        shopAddress: '',
+        shopPincode: '',
+        name: '',
+        dob: '',
+        mobile: '',
+        email: '',
+        aadhaar: '',
+        pan: '',
+        role: 'retailer',
+        password: '',
     });
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (
-            !formData.shopName ||
-            !formData.retailerName ||
-            !formData.mobile
-        ) {
-            setSuccessMessage("Please fill all required fields");
+
+        if (!formData.shopName || !formData.name || !formData.mobile) {
+            toast.error("Please fill all required fields")
             return;
         }
-        setSuccessMessage("Retailer created successfully!");
-        setTimeout(() => {
-            setCurrentView("view");
-            setFormData({
-                shopName: "",
-                shopAddress: "",
-                retailerName: "",
-                dob: "",
-                mobile: "",
-                email: "",
-                aadhaar: "",
-                pan: "",
-            });
-            setSuccessMessage("");
-        }, 2000);
+        if (formData.password !== confirmPassword) {
+            toast.error("Password not matched");
+            return;
+        }
+
+        console.log(formData)
+        const success = await dispatch(createUser(formData));
+
+        if (success) {
+            toast.success('Retailer created successfully!');
+            setSuccessMessage("Retailer created successfully!")
+
+        } else {
+            toast.error(error || 'Failed to create Retailer');
+            setSuccessMessage(error || 'Failed to create Retailer')
+        }
     };
     return (
 
@@ -75,180 +85,121 @@ function CreateRetailer() {
             {/* Form */}
             <div className="backdrop-blur-[24px] bg-white/60 rounded-[26px] border border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.06)] p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            Shop Name *
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.shopName}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    shopName: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter shop name"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            Retailer Name *
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.retailerName}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    retailerName: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter retailer name"
-                        />
-                    </div>
-                    <div className="md:col-span-2">
-                        <label className="block text-gray-700 mb-2">
-                            Shop Address *
-                        </label>
-                        <textarea
-                            value={formData.shopAddress}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    shopAddress: e.target.value,
-                                })
-                            }
-                            rows={3}
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter shop address"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            Date of Birth *
-                        </label>
-                        <input
-                            type="date"
-                            value={formData.dob}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    dob: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            Mobile Number *
-                        </label>
-                        <input
-                            type="tel"
-                            value={formData.mobile}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    mobile: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter mobile number"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            Email ID *
-                        </label>
-                        <input
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    email: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter email address"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            Aadhaar Number *
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.aadhaar}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    aadhaar: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter Aadhaar number"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 mb-2">
-                            PAN Number *
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.pan}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    pan: e.target.value,
-                                })
-                            }
-                            className="w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border border-white/40 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-                            placeholder="Enter PAN number"
-                        />
-                    </div>
-                </div>
 
-                {/* File Uploads */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {[
-                        "Shop Photo",
-                        "Profile Photo",
-                        "Aadhaar Card",
-                        "PAN Card",
-                    ].map((label) => (
-                        <div key={label}>
-                            <label className="block text-gray-700 mb-2">
-                                Upload {label} *
-                            </label>
-                            <input
-                                type="file"
-                                className="hidden"
-                                id={`retailer-${label.replace(" ", "-").toLowerCase()}`}
-                            />
-                            <label
-                                htmlFor={`retailer-${label.replace(" ", "-").toLowerCase()}`}
-                                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-[16px] backdrop-blur-[20px] bg-white/60 border-2 border-dashed border-white/40 cursor-pointer hover:bg-white/80 transition-all"
-                            >
-                                <Upload className="w-5 h-5 text-gray-600" />
-                                <span className="text-sm text-gray-700">
-                                    Choose file
-                                </span>
-                            </label>
-                        </div>
-                    ))}
-                </div>
+                    <Input
+                        label="Shop Name *"
+                        value={formData.shopName}
+                        placeholder={"Enter shop name"}
+                        onChange={e => setFormData({ ...formData, shopName: e.target.value })}
+                    />
 
-                {/* {successMessage && (
+                    <Input
+                        label=" Retailer Name *"
+                        value={formData.name}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Enter retailer name"
+                    />
+
+                    <TextArea
+                        label="Shop Address *"
+                        value={formData.shopAddress}
+                        onChange={e => setFormData({ ...formData, shopAddress: e.target.value })}
+                        placeholder={"Enter Shop Address"}
+                    />
+                    <Input
+                        label="Shop Pincode *"
+                        value={formData.shopPincode}
+                        onChange={e => setFormData({ ...formData, shopPincode: e.target.value })}
+                        placeholder="Enter Shop Pincode"
+                    />
+
+                    <Input
+                        type="text"
+                        label="Date of Birth *"
+                        placeholder="DD/MM/YYYY"
+                        value={formData.dob}
+                        onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, ''); // sirf numbers
+
+                            if (value.length > 8) value = value.slice(0, 8);
+
+                            if (value.length > 4) {
+                                value = value.replace(/(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
+                            } else if (value.length > 2) {
+                                value = value.replace(/(\d{2})(\d{0,2})/, '$1/$2');
+                            }
+                            setFormData({ ...formData, dob: value });
+                        }}
+                        inputMode="numeric"
+                    />
+
+
+                    <Input
+                        label="Mobile Number *"
+                        value={formData.mobile}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, ''); // sirf numbers
+                            if (value.length <= 10) {
+                                setFormData({ ...formData, mobile: value });
+                            }
+                        }}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        placeholder="Enter Mobile No."
+                    />
+
+                    <Input
+                        label="Email ID *"
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="Enter Email Id"
+                    />
+
+                    <Input
+                        label="Aadhaar Number *"
+                        value={formData.aadhaar.replace(/(\d{4})(?=\d)/g, '$1 ')}
+                        onChange={(e) => {
+                            const rawValue = e.target.value.replace(/\D/g, ''); // only digits
+                            if (rawValue.length <= 12) {
+                                setFormData({
+                                    ...formData,
+                                    aadhaar: rawValue, // 🔥 stored WITHOUT spaces
+                                });
+                            }
+                        }}
+                        inputMode="numeric"
+                        placeholder="0000 0000 0000"
+                    />
+
+                    <Input
+                        label="PAN Number *"
+                        value={formData.pan}
+                        onChange={e => setFormData({ ...formData, pan: e.target.value })}
+                        placeholder="Enter Pan Number"
+                    />
+
+                    <Input
+                        label="Password *"
+                        value={formData.password}
+                        onChange={e => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="Enter Password"
+                    />
+
+                    <Input
+                        label="Confirm Password*"
+                        value={formData.confirmPassword}
+                        onChange={(e) => setConformPassword(e.target.value)}
+                        placeholder="Confirm Password"
+                    />
+
+                </div>
+                {successMessage && (
                     <div className="mb-6 p-4 rounded-[16px] bg-gradient-to-br from-green-400/10 to-emerald-400/10 border border-green-300/30">
                         <p className="text-sm text-green-700">
                             {successMessage}
                         </p>
                     </div>
-                )} */}
+                )}
 
                 <div className="flex justify-end gap-4">
                     <button

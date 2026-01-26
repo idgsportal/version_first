@@ -8,25 +8,29 @@ const initState = {
         fullName: "",
         role: ""
     },
-    authenticating: false,
+
     authenticate: false,
-    loading: false,
+
+    // 🔹 separation of concerns
+    authenticating: false,   // silent auth check
+    loading: false,          // login button spinner
+
+    authChecked: false,
+
     error: null,
-    message: "",
-    authChecked: false
+    message: ""
 };
 
 export default (state = initState, action) => {
     switch (action.type) {
 
+        // 🔹 USER CLICKED LOGIN
         case authConstant.LOGIN_REQUEST:
             return {
                 ...state,
-                authenticating: true,
                 loading: true,
                 error: null,
-                message: "",
-                authChecked: true
+                message: ""
             };
 
         case authConstant.LOGIN_SUCCESS:
@@ -34,23 +38,36 @@ export default (state = initState, action) => {
                 ...state,
                 user: action.payload.user,
                 authenticate: true,
-                authenticating: false,
                 loading: false,
+                authenticating: false,
+                authChecked: true,
                 error: null,
-                message: action.payload.message || "",
-                authChecked: true
+                message: action.payload.message || ""
             };
 
         case authConstant.LOGIN_FAILURE:
             return {
                 ...state,
-                error: action.payload.error,
-                authenticate: false,
-                authenticating: false,
                 loading: false,
-                authChecked: true,
+                authenticate: false,
+                error: action.payload.error
             };
 
+        // 🔹 SILENT SESSION CHECK
+        case authConstant.AUTH_CHECK_START:
+            return {
+                ...state,
+                authenticating: true
+            };
+
+        case authConstant.AUTH_CHECK_END:
+            return {
+                ...state,
+                authenticating: false,
+                authChecked: true
+            };
+
+        // 🔹 LOGOUT
         case authConstant.LOGOUT_REQUEST:
             return {
                 ...state,
@@ -65,8 +82,8 @@ export default (state = initState, action) => {
         case authConstant.LOGOUT_FAILURE:
             return {
                 ...state,
-                error: action.payload.error,
-                loading: false
+                loading: false,
+                error: action.payload.error
             };
 
         default:

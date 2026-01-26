@@ -35,6 +35,20 @@ import SubAdminList from "../admin/forms/subadmin/SubAdminList";
 import ServicesManagement from "../admin/pages/ServiceManagement";
 
 
+
+// Retailer Route Start Here
+import RetailerLayout from "../retailer/layout/RetailerLayout"
+import RetailerDashboard from "../retailer/pages/RetailerDashboard";
+import RetailerWallet from "../retailer/pages/RetailerWallet";
+import { MPEDistrict } from "../retailer/pages/MpeDistrict";
+
+
+
+
+
+
+
+
 const AppRoutes = () => {
     const auth = useSelector(state => state.auth)
     return (
@@ -68,12 +82,31 @@ const AppRoutes = () => {
                 <Route path="/admin/sub-admins" element={<SubAdminList />} />
                 <Route path="/admin/services" element={<ServicesManagement />} />
 
+
             </Route>
+
+            <Route
+                path="/retailer"
+                element={
+                    <ProtectedRoute role="retailer">
+                        <RetailerLayout />
+                    </ProtectedRoute>
+                }
+            >
+                <Route index element={<RetailerDashboard />} />
+                {/* <Route path="wallet" element={<RetailerWallet />} /> */}
+                <Route path="/retailer/mpedistrict" element={<MPEDistrict />} />
+                {/* <Route path="services" element={<Services />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="change-password" element={<ChangePassword />} /> */}
+            </Route>
+
+
 
             {/* Default */}
             <Route path="*" element={<Navigate to="/login" />} />
 
-        </Routes>
+        </Routes >
 
     );
 };

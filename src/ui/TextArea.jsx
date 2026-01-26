@@ -1,7 +1,7 @@
 function TextArea({ label, name, value, onChange, placeholder, rows = 3, ...rest }) {
     return (
         <div className="md:col-span-2">
-            {label && <label className="block text-gray-700 mb-2 font-medium">{label}</label>}
+            {label && <label className="block text-gray-700 mb-2">{label}</label>}
             <textarea
                 name={name}
                 value={value}
