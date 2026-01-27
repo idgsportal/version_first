@@ -1,5 +1,5 @@
 import { authConstant } from "./Constants"
-import axios from "../../Helper/axios"
+import axios from "../../helper/axios"
 import { toast } from "../../ui/toast/ToastHelper"
 import { socket } from "../../socket/socket";
 
